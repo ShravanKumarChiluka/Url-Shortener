@@ -6,8 +6,8 @@
         public int ShortUrlId { get; set; }
         public ShortUrl? ShortUrl { get; set; }
         public DateTime ClickedAt { get; set; } = DateTime.UtcNow;
-        public string IpAddress { get; set; }
-        public string UserAgent { get; set; }
-        public string Referrer { get; set; }
+        public string IpAddress { get; set; } = string.Empty;
+        public string UserAgent { get; set; }= string.Empty;
+        public string Referrer { get; set; } = string.Empty;
     }
 }

@@ -10,6 +10,6 @@
         public User? User { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? ExpiresAt { get; set; }
-        public ICollection<Click> Clicks = new List<Click>();
+        public ICollection<Click> Clicks { get; set; } = new List<Click>();
     }
 }
