@@ -43,7 +43,7 @@ namespace UrlShortener.Services
         public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == dto.Username);
-            if (user == null || BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
                 return null;
 
             return new AuthResponseDto
@@ -51,6 +51,29 @@ namespace UrlShortener.Services
                 Token = GenerateToken(user),
                 Username = user.Username
             };
+        }
+
+        public string GenerateToken(User user)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expiry = DateTime.UtcNow.AddHours(double.Parse(_config["Jwt:ExpiryHours"]!));
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+                new Claim(ClaimTypes.Name,user.Username)
+            };
+
+            var token = new JwtSecurityToken
+            (
+                issuer : _config["Jwt:Issuer"],
+                audience : _config["Jwt:Audience"],
+                claims: claims,
+                expires:expiry,
+                signingCredentials : creds
+            );
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
