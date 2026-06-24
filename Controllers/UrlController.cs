@@ -15,7 +15,7 @@ namespace UrlShortener.Controllers
         private readonly UrlService _urlService;
         public UrlController(UrlService urlService)
         {
-            urlService = _urlService;
+            _urlService = urlService;
         }
         private int GetUserId() =>
             int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);

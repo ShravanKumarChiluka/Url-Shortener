@@ -2,7 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using StackExchange.Redis;
 using UrlShortener.Data;
@@ -50,12 +50,12 @@ builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer((document, context, ct) =>
     {
-        document.Components ??= new Microsoft.OpenApi.Models.OpenApiComponents();
-        document.Components.SecuritySchemes = new Dictionary<string, Microsoft.OpenApi.Models.OpenApiSecurityScheme>
+        document.Components ??= new OpenApiComponents();
+        document.Components.SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
         {
-            ["Bearer"] = new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            ["Bearer"] = new OpenApiSecurityScheme
             {
-                Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+                Type = SecuritySchemeType.Http,
                 Scheme = "bearer",
                 BearerFormat = "JWT",
                 Description = "Enter JWT token"
